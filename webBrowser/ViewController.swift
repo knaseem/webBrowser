@@ -9,9 +9,11 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var barView: UIView!
+    
+    @IBOutlet weak var urlField: UITextField!
     
     var webView: WKWebView?
     
@@ -41,6 +43,12 @@ class ViewController: UIViewController {
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         barView.frame = CGRect(x:0, y: 0, width: size.width, height: 30)
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    urlField.resignFirstResponder()
+    webView!.loadRequest(NSURLRequest(URL: NSURL(string: urlField.text!)!))
+    return false
     }
 
    
