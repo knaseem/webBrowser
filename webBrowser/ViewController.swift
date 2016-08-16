@@ -9,7 +9,7 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, WKNavigationDelegate {
     
     @IBOutlet weak var barView: UIView!
     @IBOutlet weak var urlField: UITextField!
@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     required init(coder aDecoder: NSCoder) {
         self.webView = WKWebView(frame: CGRectZero)
         super.init(coder: aDecoder)!
+        self.webView!.navigationDelegate = self
     }
 
     override func viewDidLoad() {
@@ -87,6 +88,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
             forwardButton.enabled = webView!.canGoForward
         }
     
+    }
+    
+    func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
    
 } // End of ViewController Class.
