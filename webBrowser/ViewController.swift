@@ -11,6 +11,8 @@ import WebKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var barView: UIView!
+    
     var webView: WKWebView?
     
     
@@ -22,6 +24,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        barView.frame = CGRect(x:0, y: 0, width: view.frame.width, height: 30)
         
         
         view.addSubview(webView!)
@@ -34,6 +37,10 @@ class ViewController: UIViewController {
         let request = NSURLRequest(URL:url!)
         webView!.loadRequest(request)
 
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        barView.frame = CGRect(x:0, y: 0, width: size.width, height: 30)
     }
 
    
