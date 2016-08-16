@@ -12,8 +12,13 @@ import WebKit
 class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var barView: UIView!
-    
     @IBOutlet weak var urlField: UITextField!
+    
+    @IBOutlet weak var backButton: UIBarButtonItem!
+    @IBOutlet weak var forwardButton: UIBarButtonItem!
+    @IBOutlet weak var reloadButton: UIBarButtonItem!
+    
+    
     
     var webView: WKWebView?
     
@@ -38,10 +43,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         view.addConstraints([height, width])
         
+        webView!.addObserver(self, forKeyPath: "loading", options: .New, context: nil)
+        
         let url = NSURL(string:"http://www.yahoo.com")
         let request = NSURLRequest(URL:url!)
         webView!.loadRequest(request)
-
+        
+        backButton.enabled = false
+        forwardButton.enabled = false
+        
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -49,11 +59,35 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-    urlField.resignFirstResponder()
-    webView!.loadRequest(NSURLRequest(URL: NSURL(string: urlField.text!)!))
-    return false
+        urlField.resignFirstResponder()
+        webView!.loadRequest(NSURLRequest(URL: NSURL(string: urlField.text!)!))
+        return false
     }
 
+    
+    @IBAction func back(sender: AnyObject) {
+        webView!.goBack()
+        
+    }
+    
+    @IBAction func forward(sender: AnyObject) {
+        webView!.goForward()
+        
+    }
+    
+    @IBAction func reload(sender: AnyObject) {
+        let request = NSURLRequest(URL:webView!.URL!)
+        webView!.loadRequest(request)
+        
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>) {
+        if (keyPath == "loading") {
+            backButton.enabled = webView!.canGoBack
+            forwardButton.enabled = webView!.canGoForward
+        }
+    
+    }
    
 } // End of ViewController Class.
 
